@@ -37,6 +37,34 @@ ${msg}
 <div id="erro">  </div>
 </form>
 
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+<%@ page import="entity.*,java.util.*" %>
+<jsp:useBean id="mb" class="manager.ManagerBean"></jsp:useBean>
+<table >
+	<tr>
+	<th>Id</th>
+	<th>Nome</th>
+	<th>Email</th>
+	<th>Imagem</th>
+	<th>Alterar</th>
+	<th>Excluir</th>
+	</tr>
+
+<c:forEach items="${mb.clientes}" var="linha"> 
+<tr>
+ 	<td>${linha.id}</td>
+ 	<td>${linha.nome}</td>
+ 	<td>${linha.email}</td>
+ 	<td><img src="${linha.image}" width="30px" height = "30px"/></td>
+    <td> <a href="#" onclick="javascript:excluir(${linha.id})">Excluir</a> </td>
+    <td><a href="Controller?cmd=editar&id=${linha.id }">Editar</a></td>
+  </tr>
+
+</c:forEach>
+
+</table>
+
+
 <script>
 
  class Cliente {
@@ -106,7 +134,13 @@ ${msg}
 		
 	}
 }
+  function excluir(vid){
+	  if (window.confirm('deseja Excluir')){
+		  window.location.href='Controller?cmd=excluir&id='+vid;
+	  }
+  }
 
+ 
   
 </script>
 

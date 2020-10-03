@@ -20,14 +20,33 @@ public class Controller extends HttpServlet {
  
   //Link <a href=
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	
+	   if(request.getParameter("cmd")!=null) {
+		   String cmd = request.getParameter("cmd");
+		   if(cmd.equals("excluir")) {
+			   excluir(request, response);   
+		   }
+		   else if(cmd.equals("editar")) {
+			   editar(request,response);
+		   }
+	   }
+	   
+	
 	}
 
+	
+	
+	
+	
+	
 	//Formulario é push
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    String cmd = request.getParameter("cmd");
 		
 	    if(cmd.equals("gravar")) {
 	    	gravar(request,response);
+	    }else if(cmd.equals("alterar")){
+	    	alterar(request, response);
 	    }
 	}
 	
@@ -50,4 +69,50 @@ public class Controller extends HttpServlet {
     	 request.getRequestDispatcher("sistema.jsp").forward(request, response);
 	}
 
+     protected void excluir (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    		
+    	 try {
+  	       Integer id= new Integer(request.getParameter("id"));
+  	       new ClienteDao().delete(id);
+  	       
+  	       request.setAttribute("msg", "Dados Excluidos");
+    	 }catch(Exception ex){
+    	 request.setAttribute("msg", "Error:" + ex.getMessage());
+    	 }
+  	     request.getRequestDispatcher("sistema.jsp").forward(request, response);
+  	}
+     
+     
+ 	protected void alterar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	  
+ 		Cliente c = new Cliente( 
+ 				new Integer(request.getParameter("id")),
+ 		request.getParameter("nome"), 
+ 		request.getParameter("email"), 
+ 		request.getParameter("imagem")); 
+ 		   try { new ClienteDao().update(c); 
+ 		       request.setAttribute("msg", "Dados Alterados"); 
+ 		   }catch (Exception ex) { 
+ 			   ex.printStackTrace();
+ 			   request.setAttribute("msg", "Error:" + ex.getMessage());
+ 		 }
+ 		   request.getRequestDispatcher("sistema.jsp"). forward(request, response);
+   	
+     
+     
+    }
+ 	
+ 	protected void editar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	   
+ 		try {
+ 			Integer id = new Integer(request.getParameter("id"));
+ 			Cliente c = new ClienteDao().findByCode(id);
+ 			request.setAttribute("cliente", c);
+ 		}catch (Exception ex) {
+ 			request.setAttribute("msg", "Error:" +ex.getMessage());
+ 		}
+ 		request.getRequestDispatcher("editar.jsp").forward(request, response);
+	
+ 	
+}
 }

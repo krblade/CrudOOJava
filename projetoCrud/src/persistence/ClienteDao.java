@@ -67,7 +67,7 @@ public class ClienteDao extends Dao{
 	public void update (Cliente c) throws Exception{
 		open();
 		stmt = con.prepareStatement
-	("update cliente set nome=?,email=?,imagem=? where id=?");
+	("update cliente set nome=?,email=?,image=? where id=?");
 		
 		stmt.setString(1, c.getNome());
 		stmt.setString(2, c.getEmail());
